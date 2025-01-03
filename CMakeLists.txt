@@ -21,7 +21,8 @@ find_package(rclpy REQUIRED) # Add rclpy for Python nodes
 
 # Install Python nodes
 install(PROGRAMS
-  src/move_robot_node.py  # Add your Python node here
+  scripts/move_robot_client.py
+  scripts/move_robot_node.py  # Add your Python node here
   DESTINATION lib/${PROJECT_NAME}
 )
 

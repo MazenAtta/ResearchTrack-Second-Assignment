@@ -129,7 +129,7 @@ float64 y
 
 Ensure the following dependencies are installed:
 - ROS Noetic
-- Simulation environment from the `assignment_2_2024` repository.
+- Simulation environment from Gazebo.
 - `actionlib`
 - `nav_msgs`
 - `geometry_msgs`

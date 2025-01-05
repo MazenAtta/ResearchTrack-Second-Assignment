@@ -10,8 +10,8 @@
     <!-- Launch the service node -->
     <node pkg="assignment_2_2024" type="service_node.py" name="service_node" output="screen" />
     <!-- Launch the action client node -->
-    <!--node pkg="assignment_2_2024" type="action_client_node.py" name="action_client_node" output="screen" -->
+    <node pkg="assignment_2_2024" type="action_client_node.py" name="action_client_node" output="screen" />
 
     <!-- Launch the service node in a seperate konsole window-->
-    <node pkg="assignment_2_2024" type="action_client_node.py" name="action_client_node" output="screen" launch-prefix = "konsole -e"/>
+    <!--node pkg="assignment_2_2024" type="action_client_node.py" name="action_client_node" output="screen" launch-prefix = "konsole -e"-->
 </launch>

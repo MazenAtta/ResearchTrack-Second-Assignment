@@ -42,7 +42,7 @@ class ActionClientNode:
         goal = PlanningGoal()
         goal.target_pose.pose.position.x = x
         goal.target_pose.pose.position.y = y
-        self.client.send_goal(goal, feedback_cb=self.feedback_callback)
+        self.client.send_goal(goal)
         rospy.loginfo(f"Goal sent: ({x}, {y})")
 
     def feedback_callback(self, feedback):

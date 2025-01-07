@@ -1,21 +1,43 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
+from robot_urdf.msg import RobotState  # Custom message
 
 class MoveRobotNode(Node):
     def __init__(self):
         super().__init__('move_robot_node')
 
-        # Create a publisher for /cmd_vel
+        # Publishers
         self.cmd_vel_publisher = self.create_publisher(Twist, '/cmd_vel', 10)
+        self.state_pub = self.create_publisher(RobotState, '/robot_state', 10)
 
-        # Log node startup
-        self.get_logger().info('MoveRobotNode has started!')
+        # Subscriber
+        self.odom_subscriber = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
+
+        # Internal state
+        self.robot_state = RobotState()
+
+        # Log startup
+        self.get_logger().info('MoveRobotNode with Odometry Subscriber has started!')
+
+    def odom_callback(self, msg):
+        """Callback for odometry data."""
+        # Extract position and velocity
+        self.robot_state.x = msg.pose.pose.position.x
+        self.robot_state.y = msg.pose.pose.position.y
+        self.robot_state.vel_x = msg.twist.twist.linear.x
+        self.robot_state.vel_z = msg.twist.twist.angular.z
+
+        # Publish the custom RobotState message
+        self.state_pub.publish(self.robot_state)
+        self.get_logger().info(f'Robot State: x={self.robot_state.x}, y={self.robot_state.y}, '
+                               f'vel_x={self.robot_state.vel_x}, vel_z={self.robot_state.vel_z}')
 
     def move_robot(self, linear, angular):
-        """Publishes velocity commands based on user input."""
+        """Publishes velocity commands."""
         twist_msg = Twist()
         twist_msg.linear.x = linear
         twist_msg.angular.z = angular

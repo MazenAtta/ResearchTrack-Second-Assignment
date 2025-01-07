@@ -17,12 +17,21 @@ endif()
 
 # Find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclpy REQUIRED) # Add rclpy for Python nodes
+find_package(rclpy REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+
+# Generate custom message
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/RobotState.msg"
+  DEPENDENCIES geometry_msgs nav_msgs std_msgs
+)
 
 # Install Python nodes
 install(PROGRAMS
-  scripts/move_robot_client.py
-  scripts/move_robot_node.py  # Add your Python node here
+  scripts/move_robot_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

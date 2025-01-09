@@ -2,9 +2,12 @@
 
 import rclpy
 from rclpy.node import Node
+from rclpy.executors import MultiThreadedExecutor
+from threading import Thread
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from robot_urdf.msg import RobotState  # Custom message
+
 
 class MoveRobotNode(Node):
     def __init__(self):
@@ -33,8 +36,7 @@ class MoveRobotNode(Node):
 
         # Publish the custom RobotState message
         self.state_pub.publish(self.robot_state)
-        self.get_logger().info(f'Robot State: x={self.robot_state.x}, y={self.robot_state.y}, '
-                               f'vel_x={self.robot_state.vel_x}, vel_z={self.robot_state.vel_z}')
+
 
     def move_robot(self, linear, angular):
         """Publishes velocity commands."""
@@ -53,9 +55,18 @@ class MoveRobotNode(Node):
         self.get_logger().info('Robot stopped!')
 
 
+def spin_node_in_thread(node):
+    """Runs rclpy.spin in a separate thread."""
+    rclpy.spin(node)
+
+
 def main(args=None):
     rclpy.init(args=args)
     move_robot_node = MoveRobotNode()
+
+    # Run rclpy.spin in a separate thread
+    spin_thread = Thread(target=spin_node_in_thread, args=(move_robot_node,), daemon=True)
+    spin_thread.start()
 
     try:
         while rclpy.ok():
